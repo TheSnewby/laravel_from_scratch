@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Post;
+use DB;
 
 class PostsController extends Controller
 {
@@ -14,7 +16,13 @@ class PostsController extends Controller
      */
     public function index()
     {
-        //
+        // $posts = Post::orderBy('title', 'desc')->get(); // Retrieve all posts from the database in descending order by title
+        // $posts = Post::orderBy('title', 'desc')->take(1)->get();    // Shows only latest # of posts
+        // $posts = Post::all(); // Retrieve all posts from the database
+        // return Post::where('title', 'Post Two')->get();
+        // $posts = DB::select('Select * from posts'); // Using raw SQL query to get all posts
+        $posts = Post::orderBy('title', 'desc')->paginate(10); // Paginate results to show 10 posts per page
+        return view('posts.index')->with('posts', $posts);
     }
 
     /**
@@ -46,7 +54,8 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::find($id);
+        return view('posts.show')->with('post', $post);
     }
 
     /**
